@@ -1,0 +1,110 @@
+States
+================================================================================
+- Startup
+    - Initialize devices
+    - Try to move down, then up
+    - Transit to Idle
+- Idle
+    - Wait for command
+- Finding battery surface
+- Run test
+    - Force test
+    - Displacement test
+- Retracting to start
+
+TODO: Define state behavior in terms of classes
+
+
+RTOS Tasks
+================================================================================
+NAME, Period, WCET
+- Update displacement measurement
+- Update force measurement
+- Update voltage measurement
+- Update motor temperature measurement
+- Update battery temperature measurement
+- Update state
+- Send serial data
+- Read serial data
+- Update Clock, 1ms (?)
+
+TODO: Figure-out WCET and period for each task
+
+NOTE: Tasks are periodic and only run when given a binary semaphore. At the end 
+      of their task, they release the it.
+
+NOTE: Information on binary semephores:
+    https://www.freertos.org/Embedded-RTOS-Binary-Semaphores.html
+    https://microcontrollerslab.com/freertos-binary-semaphore-tasks-interrupt-synchronization-u-arduino/
+
+RTOS Interupts
+--------------------------------------------------------------------------------
+- Displacement measurement (HW)
+- Force measurement (HW)
+- Clock (Timer)
+    - Voltage measurement (timer)
+    - Motor temperature (timer)
+    - Battery temperature (timer)
+    - State (timer)
+    - Send serial data (timer)
+    - Read serial data (timer)
+    - Clock (timer)
+
+NOTE: Interupts only give semaphores/mutexes
+
+
+Classes to Consider
+================================================================================
+- DisplacementMeasurementTool
+    - VINCA Digital Calipers implements this
+    - Depends on DigitalPin
+    - Observed by BatterProperties
+    - Observers Clock (Depends on ClockObserver)
+- ForceMeasurementTool
+    - Hx711 loadcell amplifier implements this
+    - Depends on DigitalPin
+    - Observed by BatterProperties
+    - Observers Clock (Depends on ClockObserver)
+- Voltmeter
+    - Depends on AnalogPin
+    - Observed by BatterProperties
+- Thermometer
+    - Depends on Voltmeter
+    - Observed by BatterProperties
+- DigitalPin
+    - Read and write to digital pin
+- AnalogPin
+    - Read and write to analog pin
+- FIFO Queue
+    - Wrap FreeRTOS queue in this
+- Semaphores
+    - Wrap FreeRTOS semaphore in this
+- PunchHead
+    - Location (Depends on DisplacementMeasurementTool)
+    - Force at punch head (Depends on ForceMeasurementTool)
+- BatteryProperties
+    - Surface displacement (Depends on PunchHead)
+        - Use the punch head displacement and the location where the punch head
+          started experiencing force to calculate this
+    - Surface Force (Depends on PunchHead)
+    - Temperature (Depends on Thermometer)
+    - Voltage (Depends on Voltmeter)
+- DCMotorController
+    - Controls the direction of the DC motor.
+- DCMotor
+    - DCMotorController
+    - Thermometer
+- DataWriter
+    - Serial port write
+- DataReader
+    - Serial port read
+- Clock
+    - Calls time function (Something like Time_millisSinceBoot())
+    - Updates ClockObservers
+- ClockObserver
+    - Holds start time, period, completed flag, and whether it repeats
+    - Updated by time
+- MachineState
+    - TODO: Define events (like ESTOP)
+    - Current state changes behavior based on BatteryProperties
+    - The two testing states states have a dependancy on ClockObserver
