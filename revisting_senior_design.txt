@@ -55,21 +55,23 @@ NOTE: Interupts only give semaphores/mutexes
 
 Classes to Consider
 ================================================================================
-- DisplacementMeasurementTool
+- DisplacementSensor
     - VINCA Digital Calipers implements this
     - Depends on DigitalPin
     - Observed by BatterProperties
     - Observers Clock (Depends on ClockObserver)
-- ForceMeasurementTool
+- ForceSensor
     - Hx711 loadcell amplifier implements this
     - Depends on DigitalPin
     - Observed by BatterProperties
     - Observers Clock (Depends on ClockObserver)
-- Voltmeter
+- VoltageSensor
+- PinVoltmeter
+    - Implements VoltageSensor
     - Depends on AnalogPin
     - Observed by BatterProperties
-- Thermometer
-    - Depends on Voltmeter
+- TemperatureSensor
+    - Depends on PinVoltmeter
     - Observed by BatterProperties
 - DigitalPin
     - Read and write to digital pin
@@ -80,20 +82,20 @@ Classes to Consider
 - Semaphores
     - Wrap FreeRTOS semaphore in this
 - PunchHead
-    - Location (Depends on DisplacementMeasurementTool)
-    - Force at punch head (Depends on ForceMeasurementTool)
+    - Location (Depends on DisplacementSensor)
+    - Force at punch head (Depends on ForceSensor)
 - BatteryProperties
     - Surface displacement (Depends on PunchHead)
         - Use the punch head displacement and the location where the punch head
           started experiencing force to calculate this
     - Surface Force (Depends on PunchHead)
-    - Temperature (Depends on Thermometer)
+    - Temperature (Depends on TemperatureSensor)
     - Voltage (Depends on Voltmeter)
 - DCMotorController
     - Controls the direction of the DC motor.
 - DCMotor
     - DCMotorController
-    - Thermometer
+    - TemperatureSensor
 - DataWriter
     - Serial port write
 - DataReader
