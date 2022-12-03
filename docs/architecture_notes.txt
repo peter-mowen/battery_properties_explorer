@@ -1,0 +1,71 @@
+Entities
+================================================================================
+- TestParameters
+    - TestType
+    - Target Force or Displacement (based on test type)
+    - Timeout
+- BatteryPropertiesExplorer
+    - PunchHead
+        - ForceSensor
+        - DisplacementSensor
+    - Battery
+        - Voltmeter
+        - TemperatureSensor
+    - DcMotor
+        - TemperatureSensor
+        - DcMotorController
+    - Clock
+    - DataPort
+
+Use Cases
+================================================================================
+
+- Movement Test
+    - Inputs:  PunchHead
+    - Outputs: Success or Failure
+    - Main Path
+        - Move PunchHead down 0.1mm
+        - Move PunchHead up 0.1mm
+        - Report result
+- Get TestParameters from user
+    - Inputs:  DataPort
+    - Outputs: TestParameters
+    - Main Path
+        - Wait for TestParameters from user to come across the DataPort
+        - Return TestParameters
+- Move PunchHead to Battery's surface
+    - Inputs:  PunchHead, Battery
+    - Outputs: Success or Failure
+    - Main Path
+        - Move PunchHead toward Battery
+        - When PunchHead encounters a force of at least 3N, assume that is the
+          Battery's surface and stop PunchHead
+        - Report result.
+- Deform Battery's surface until a specific displacement is reached and hold it
+    - Inputs: BatteryPropertiesExplorer, TestParameters
+    - Output: Success or Failure
+    - Main Path
+        - Move BatteryPropertiesExplorer's PunchHead to 
+          BatteryPropertiesExplorer's Battery's surface
+        - Wait 10 seconds
+        - Move the BatteryPropertiesExplorer's PunchHead to the displacement
+          specified in the TestParameters
+        - Maintain that displacement and report the displacement of the
+          BatteryPropertiesExplorer's PunchHead's force and displacement, the
+          BatteryPropertiesExplorer's Battery voltage and temperature, and the
+          BatteryPropertiesExplorer's DcMotor's temperature through the DataPort
+          every 1 second until the time specified in the TestParameters
+- Deform Battery's surface until a specific force is reached and hold it.
+    - Inputs: BatteryPropertiesExplorer, TestParameters
+    - Output: Success or Failure
+    - Main Path
+        - Move BatteryPropertiesExplorer's PunchHead to 
+          BatteryPropertiesExplorer's Battery's surface
+        - Wait 10 seconds
+        - Move the BatteryPropertiesExplorer's PunchHead to the force specified
+          in the TestParameters
+        - Maintain that displacement and report the displacement of the
+          BatteryPropertiesExplorer's PunchHead's force and displacement, the
+          BatteryPropertiesExplorer's Battery voltage and temperature, and the
+          BatteryPropertiesExplorer's DcMotor's temperature through the DataPort
+          every 1 second until the time specified in the TestParameters
