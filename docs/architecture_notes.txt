@@ -6,14 +6,14 @@ Entities
     - Timeout
 - BatteryPropertiesExplorer
     - PunchHead
-        - ForceSensor
-        - DisplacementSensor
+      - ForceSensor
+      - DisplacementSensor
+      - DcMotor
+        - TemperatureSensor
+        - DcMotorController
     - Battery
         - Voltmeter
         - TemperatureSensor
-    - DcMotor
-        - TemperatureSensor
-        - DcMotorController
     - Clock
     - DataPort
 

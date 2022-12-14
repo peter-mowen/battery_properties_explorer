@@ -1,0 +1,8 @@
+add_executable(Tests_MovementTest
+tests/AllTests.cpp
+tests/Tests_MovementTest.cpp)
+
+target_link_libraries(Tests_MovementTest CppUTest)
+target_link_libraries(Tests_MovementTest HardwareSpies)
+target_link_libraries(Tests_MovementTest bpxEntities)
+target_link_libraries(Tests_MovementTest interfaces)
