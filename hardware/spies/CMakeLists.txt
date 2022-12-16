@@ -1,4 +1,5 @@
 add_subdirectory(DisplacementSensorSpy)
+add_subdirectory(DcMotorControllerSpy)
 
 set(SRC
 DisplacementSensorSpy/src/DisplacementSensorSpy.c
